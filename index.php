@@ -12,8 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Zà-úÀ-Ú ]*$/", $name)) {
             $nameErr = "Apenas letras e espaços em branco são permitidos";
-        }    }
-    
+        }
+    }
+
     if (empty($_POST["email"])) {
         $emailErr = "Email é obrigatorio";
     } else {
@@ -30,12 +31,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $comment = "";
     } else {
         $comment = test_input($_POST["comment"]);
+        $comment = wordwrap($comment, 70);
     }
 
     if (empty($_POST["gender"])) {
         $genderErr = "Sexo é obrigatorio";
     } else {
         $gender = test_input($_POST["gender"]);
+    }
+    /*
+      Envio de e-mail
+     */
+    $para = 'xandy.bq@gmail.com';
+    $assunto = 'E-mail através do formulario';
+    $mensagem = "De: $name <$email> \r\n";
+    $mensagem .= "Site: $website \r\n";
+    $mensagem .= "Sexo: $gender \r\n";
+    $mensagem .= "Comentarios \r\n\n $comment";
+    $headers = "From $name <$email>"
+            . "\r\n" . 'X-MAILER: PHP/' . phpversion();
+
+    IF (strlen($nameErr) == 0 && strlen($emailErr) == 0 && strlen($websiteErr) == 0) {
+        mail($para, $assunto, $mensagem, $headers);
+        $statusMail = TRUE;
+    } else {
+        $statusMail = FALSE;
     }
 }
 
@@ -70,26 +90,36 @@ function test_input($data) {
 
         <!--Deve ser utilizado "htmlspecialchars" para segurança, sempre utilizar com PHP_SELF -->
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            Name: <input type="text" name="name" value="<?= $name;?>" class="<?= strlen($nameErr) != 0 ? "err" : ''; ?>">
+            Name: <input type="text" name="name" value="<?= $name; ?>" class="<?= strlen($nameErr) != 0 ? "err" : ''; ?>">
             <span class="error">* <?php echo @$nameErr; ?></span>
             <br><br>
             E-mail:
-            <input type="email" name="email" value="<?= $email;?>" class="<?= strlen($emailErr) != 0 ? "err" : ''; ?>">
+            <input type="email" name="email" value="<?= $email; ?>" class="<?= strlen($emailErr) != 0 ? "err" : ''; ?>">
             <span class="error">* <?php echo @$emailErr; ?></span>
             <br><br>
             Website:
-            <input type="url" name="website" value="<?= $website;?>" class="<?= strlen($websiteErr) != 0 ? "err" : ''; ?>">
+            <input type="url" name="website" value="<?= $website; ?>" class="<?= strlen($websiteErr) != 0 ? "err" : ''; ?>">
             <span class="error"><?php echo @$websiteErr; ?></span>
             <br><br>
-            Comentario: <textarea name="comment" rows="5" cols="40"><?= $comment;?></textarea>
+            Comentario: <textarea name="comment" rows="5" cols="40"><?= $comment; ?></textarea>
             <br><br>
             Sexo:
-            <input type="radio" name="gender" value="F" <?php if (isset($gender) && $gender=="F") echo "checked";?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Feminino
-            <input type="radio" name="gender" value="M" <?php if (isset($gender) && $gender=="M") echo "checked";?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Masculino
+            <input type="radio" name="gender" value="Feminino" <?php if (isset($gender) && $gender == "Feminino") echo "checked"; ?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Feminino
+            <input type="radio" name="gender" value="Masculino" <?php if (isset($gender) && $gender == "Masculino") echo "checked"; ?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Masculino
             <span class="error">* <?php echo $genderErr; ?></span>
 
             <br><br>
             <input type="submit" name="submit" value="Enviar"> 
         </form>
+
+        <!-- Envio de E-mail-->
+        <?php
+            IF (isset($statusMail) && $statusMail) {
+                echo "<h1> E-mail enviado!</h1>";
+            } else {
+                echo "<h1 class='err'> E-mail não enviado!</h1>";
+            };
+        ?>
+
     </body>
 </html>
