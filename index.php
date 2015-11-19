@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $headers = "From $name <$email>"
             . "\r\n" . 'X-MAILER: PHP/' . phpversion();
 
-    IF (strlen($nameErr) == 0 && strlen($emailErr) == 0 && strlen($websiteErr) == 0) {
+    IF (strlen($nameErr) == 0 && strlen($emailErr) == 0 && strlen($websiteErr) == 0 && strlen($name != 0) && strlen($email != 0)) {
         mail($para, $assunto, $mensagem, $headers);
         $statusMail = TRUE;
     } else {
@@ -114,11 +114,11 @@ function test_input($data) {
 
         <!-- Envio de E-mail-->
         <?php
-            IF (isset($statusMail) && $statusMail) {
-                echo "<h1> E-mail enviado!</h1>";
-            } else {
-                echo "<h1 class='err'> E-mail não enviado!</h1>";
-            };
+        IF (isset($statusMail) && $statusMail) {
+            echo "<h1> E-mail enviado!</h1>";
+        } else {
+            echo "<h1 class='err'> E-mail não enviado!</h1>";
+        };
         ?>
 
     </body>
