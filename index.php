@@ -12,8 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Zà-úÀ-Ú ]*$/", $name)) {
             $nameErr = "Apenas letras e espaços em branco são permitidos";
-        }
-    }
+        }    }
     
     if (empty($_POST["email"])) {
         $emailErr = "Email é obrigatorio";
@@ -71,22 +70,22 @@ function test_input($data) {
 
         <!--Deve ser utilizado "htmlspecialchars" para segurança, sempre utilizar com PHP_SELF -->
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            Name: <input type="text" name="name" class="<?= strlen($nameErr) != 0 ? "err" : ''; ?>">
+            Name: <input type="text" name="name" value="<?= $name;?>" class="<?= strlen($nameErr) != 0 ? "err" : ''; ?>">
             <span class="error">* <?php echo @$nameErr; ?></span>
             <br><br>
             E-mail:
-            <input type="email" name="email" class="<?= strlen($emailErr) != 0 ? "err" : ''; ?>">
+            <input type="email" name="email" value="<?= $email;?>" class="<?= strlen($emailErr) != 0 ? "err" : ''; ?>">
             <span class="error">* <?php echo @$emailErr; ?></span>
             <br><br>
             Website:
-            <input type="url" name="website" class="<?= strlen($websiteErr) != 0 ? "err" : ''; ?>">
+            <input type="url" name="website" value="<?= $website;?>" class="<?= strlen($websiteErr) != 0 ? "err" : ''; ?>">
             <span class="error"><?php echo @$websiteErr; ?></span>
             <br><br>
-            Comentario: <textarea name="comment" rows="5" cols="40"></textarea>
+            Comentario: <textarea name="comment" rows="5" cols="40"><?= $comment;?></textarea>
             <br><br>
             Sexo:
-            <input type="radio" name="gender" value="female" class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Feminino
-            <input type="radio" name="gender" value="male" class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Masculino
+            <input type="radio" name="gender" value="F" <?php if (isset($gender) && $gender=="F") echo "checked";?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Feminino
+            <input type="radio" name="gender" value="M" <?php if (isset($gender) && $gender=="M") echo "checked";?> class="<?= strlen($genderErr) != 0 ? "err" : ''; ?>">Masculino
             <span class="error">* <?php echo $genderErr; ?></span>
 
             <br><br>
