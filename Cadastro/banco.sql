@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS `lista` (
 
 INSERT INTO `lista` (`email`, `dataCadastro`, `dataAtualizacao`, `situacao`, `codigo`) VALUES
 ('xandy.bq@gmail.com', '2015-11-25 07:31:15', NULL, 0, '356a192b7913b04c54574d18c28d46e6395428ab'),
-('ninny16@gmail.com', '2015-11-25 05:40:31', NULL, 0, 'da4b9237bacccdf19c0760cab7aec4a8359010b0');
+('ninny16@gmail.com', '2015-11-25 05:40:31', NULL, 0, 'da4b9237bacccdf19c0760cab7aec4a8359010b0'),
+('osnildo@gmail.com', '2015-11-25 04:53:47', NULL, 0, '3074a9c691222a9f5e1764d537d1fd75b8ccf68a');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
