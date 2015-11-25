@@ -4,6 +4,20 @@ function gerarCodigo() {
     return sha1(mt_rand());
 }
 
+/*
+ * Função que converte data 
+ * de   AAAA-MM-DD HH:II:SS 
+ * para DD/MM/AAAA HH:II:SS 
+ */
+
+function converteData($dataMysql){    
+    $dataPHP = $dataMysql;
+    if ($dataMysql) {
+        $dataPHP = date('d/m/Y G:i:s', strtotime($dataMysql));
+    }
+    return $dataPHP;
+}
+
 // Faz a requisição para conexão com o DB
 require_once 'dbconfig.php';
 /*
@@ -30,6 +44,7 @@ If (isset($_POST['btn'])) {
             ':cod' => $cod);
         $p = $conn->prepare($sql);
         $q = $p->execute($parametros);
+        header("Location: cadastro.php?cod=listar");
     }
 } elseif (isset($_GET['cod'])) {
     IF ($_GET['cod'] == 'listar') {
@@ -44,7 +59,7 @@ If (isset($_POST['btn'])) {
             echo ";'>";
             echo $r['email'] . "\t";
             echo $r['situacao'] . "\t";
-            echo $r['datacadastro'] . "\t";
+            echo converteData($r['datacadastro']) . "\t";
             echo "<a href='cadastro.php?cod=d&hash=$r[codigo]' title='Clique para excluir'>"; // Link de exclusão
             echo $r['codigo'];
             echo "</a>";
