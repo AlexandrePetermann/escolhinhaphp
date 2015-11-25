@@ -38,6 +38,7 @@ If (isset($_POST['btn'])) {
         $q = $conn->query($sql);
         $q->setFetchMode(PDO::FETCH_ASSOC);
         while ($r = $q->fetch()) {
+            // adicionado cor
             echo "<p style='color:";
             echo $r['situacao'] ? 'green' : 'red';
             echo ";'>";
