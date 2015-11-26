@@ -20,12 +20,14 @@ function converteData($dataMysql) {
 
 // Faz a requisição para conexão com o DB
 if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
-//require_once 'dbconfig.php';
-    require_once 'dbConfigHostinger';
+    require_once 'dbconfig.php';
 } ELSE {
-// Inclusão da função que envia e-mail
-    include_once 'emailConfirma.php';
+    require_once 'dbConfigHostinger.php';
 }
+include_once 'emailConfirma.php';
+// Inclusão da função que envia e-mail
+
+
 /*
   Conexão com o banco de dados
  */
