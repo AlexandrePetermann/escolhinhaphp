@@ -58,12 +58,14 @@ If (isset($_POST['btn'])) {
             echo $r['situacao'] ? 'green' : 'red';
             echo ";'>";
             echo $r['email'] . "\t";
-            echo "<a href='cadastro.php?cod=u&email=$r[email]' title='Clique para atualizar'>"; // Link de atualização
+            echo converteData($r['dataCadastro']) . "\t";
+            echo "<a href='". $_SERVER['PHP_SELF'];
+            echo "?cod=u&sit=$r[situacao]&email=$r[email]' title='Clique para atualizar'>"; // Link de atualização
             echo $r['situacao'];
             echo "</a>";
-            echo converteData($r['dataAtualizacao']) . "\t";
-            echo converteData($r['dataCadastro']) . "\t";
-            echo "<a href='cadastro.php?cod=d&hash=$r[codigo]' title='Clique para excluir'>"; // Link de exclusão
+            echo converteData($r['dataAtualizacao']) . "\t";            
+            echo "<a href='". $_SERVER['PHP_SELF'];
+            echo "?cod=d&hash=$r[codigo]' title='Clique para excluir'>"; // Link de exclusão
             echo $r['codigo'];
             echo "</a>";
             echo "</p>";
@@ -75,13 +77,20 @@ If (isset($_POST['btn'])) {
         $p = $conn->prepare($sql);
         $q = $p->execute(array(':hash' => $hash));
         header("Location: cadastro.php?cod=listar");
-    } elseif ($_GET['cod'] == 'u' && isset($_GET['email'])) {
+    } elseif ($_GET['cod'] == 'u' && isset($_GET['sit'])&& isset($_GET['email'])) {
         // atualização de dados
         $email = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_STRING);
-        $sql = 'update lista set '
-                . 'dataAtualizacao = Now(), '
-                . 'situacao = 1 '
-                . 'Where email = :email';
+        IF ($_GET['sit'] == '1') {
+            $sql = 'update lista set '
+                    . 'dataAtualizacao = NULL, '
+                    . 'situacao = 0 '
+                    . 'Where email = :email';
+        } else {
+            $sql = 'update lista set '
+                    . 'dataAtualizacao = Now(), '
+                    . 'situacao = 1 '
+                    . 'Where email = :email';
+        }
         $p = $conn->prepare($sql);
         $q = $p->execute(array(':email' => $email));
         header("Location: cadastro.php?cod=listar");
