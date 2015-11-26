@@ -19,9 +19,13 @@ function converteData($dataMysql) {
 }
 
 // Faz a requisição para conexão com o DB
-require_once 'dbconfig.php';
+if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') {
+//require_once 'dbconfig.php';
+    require_once 'dbConfigHostinger';
+} ELSE {
 // Inclusão da função que envia e-mail
-include_once 'emailConfirma.php';
+    include_once 'emailConfirma.php';
+}
 /*
   Conexão com o banco de dados
  */
@@ -46,16 +50,16 @@ If (isset($_POST['btn'])) {
             ':cod' => $cod);
         $p = $conn->prepare($sql);
         $q = $p->execute($parametros);
-        
+
         // Envio de e-mail para confirmação 
-        $link = "<a href='HTTP://".$_SERVER['SERVER_NAME']. $_SERVER['PHP_SELF'];
+        $link = "<a href='HTTP://" . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
         $link .= "?cod=u&sit=0&email=$email'";
-        $link .= "title='Clique para confirmar seu e-mail'>"; 
+        $link .= "title='Clique para confirmar seu e-mail'>";
         $link .= "Clique para confirmar seu e-mail";
         $link .= "</a>";
-        
-        emailConfirma($email,$link);
-        
+
+        emailConfirma($email, $link);
+
         header("Location: cadastro.php?cod=listar");
     }
 } elseif (isset($_GET['cod'])) {
@@ -70,14 +74,14 @@ If (isset($_POST['btn'])) {
             echo $r['situacao'] ? 'green' : 'red';
             echo ";'>";
             echo $r['email'] . "\t";
-            echo $r['codigo']. "\t";
+            echo $r['codigo'] . "\t";
             echo converteData($r['dataCadastro']) . "\t";
-            echo "<a href='". $_SERVER['PHP_SELF'];
+            echo "<a href='" . $_SERVER['PHP_SELF'];
             echo "?cod=u&sit=$r[situacao]&email=$r[email]' title='Clique para atualizar'>"; // Link de atualização
             echo $r['situacao'];
             echo "</a>";
-            echo converteData($r['dataAtualizacao']) . "\t";            
-            echo "<a href='". $_SERVER['PHP_SELF'];
+            echo converteData($r['dataAtualizacao']) . "\t";
+            echo "<a href='" . $_SERVER['PHP_SELF'];
             echo "?cod=d&hash=$r[codigo]' title='Clique para excluir'>"; // Link de exclusão
             echo "</a>";
             echo "</p>";
@@ -89,7 +93,7 @@ If (isset($_POST['btn'])) {
         $p = $conn->prepare($sql);
         $q = $p->execute(array(':hash' => $hash));
         header("Location: cadastro.php?cod=listar");
-    } elseif ($_GET['cod'] == 'u' && isset($_GET['sit'])&& isset($_GET['email'])) {
+    } elseif ($_GET['cod'] == 'u' && isset($_GET['sit']) && isset($_GET['email'])) {
         // atualização de dados
         $email = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_STRING);
         IF ($_GET['sit'] == '1') {
