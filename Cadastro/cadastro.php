@@ -10,7 +10,7 @@ function gerarCodigo() {
  * para DD/MM/AAAA HH:II:SS 
  */
 
-function converteData($dataMysql){    
+function converteData($dataMysql) {
     $dataPHP = $dataMysql;
     if ($dataMysql) {
         $dataPHP = date('d/m/Y G:i:s', strtotime($dataMysql));
@@ -49,7 +49,7 @@ If (isset($_POST['btn'])) {
 } elseif (isset($_GET['cod'])) {
     IF ($_GET['cod'] == 'listar') {
         // Listagem de dados
-        $sql = "select email, situacao, datacadastro, codigo from lista";
+        $sql = "select * from lista";
         $q = $conn->query($sql);
         $q->setFetchMode(PDO::FETCH_ASSOC);
         while ($r = $q->fetch()) {
@@ -58,8 +58,11 @@ If (isset($_POST['btn'])) {
             echo $r['situacao'] ? 'green' : 'red';
             echo ";'>";
             echo $r['email'] . "\t";
-            echo $r['situacao'] . "\t";
-            echo converteData($r['datacadastro']) . "\t";
+            echo "<a href='cadastro.php?cod=u&email=$r[email]' title='Clique para atualizar'>"; // Link de atualização
+            echo $r['situacao'];
+            echo "</a>";
+            echo converteData($r['dataAtualizacao']) . "\t";
+            echo converteData($r['dataCadastro']) . "\t";
             echo "<a href='cadastro.php?cod=d&hash=$r[codigo]' title='Clique para excluir'>"; // Link de exclusão
             echo $r['codigo'];
             echo "</a>";
@@ -71,10 +74,18 @@ If (isset($_POST['btn'])) {
         $hash = filter_input(INPUT_GET, 'hash', FILTER_SANITIZE_STRING);
         $p = $conn->prepare($sql);
         $q = $p->execute(array(':hash' => $hash));
-        echo "Excluido o e-mail!";
+        header("Location: cadastro.php?cod=listar");
+    } elseif ($_GET['cod'] == 'u' && isset($_GET['email'])) {
+        // atualização de dados
+        $email = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_STRING);
+        $sql = 'update lista set '
+                . 'dataAtualizacao = Now(), '
+                . 'situacao = 1 '
+                . 'Where email = :email';
+        $p = $conn->prepare($sql);
+        $q = $p->execute(array(':email' => $email));
         header("Location: cadastro.php?cod=listar");
     }
-// validação do e-mail
 } else {
 // botão cadastrar não foi pressionado
 // redirecionada para a pagina inicial
